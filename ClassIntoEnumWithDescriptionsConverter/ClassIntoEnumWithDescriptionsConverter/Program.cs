@@ -3,10 +3,32 @@ using System.Reflection;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using ClassIntoEnumWithDescriptionsConverter.Enums;
 
 Console.WriteLine("Converting string class into new Enum class with descriptions attribute");
 Console.WriteLine("Please insert name file with expected extension");
 var fileName = Console.ReadLine();
+
+Console.WriteLine("Select conversion type: 1.Fields name, 2. Fields value");
+
+var conversionTypeInput = Console.ReadLine();
+DescriptionConversionType conversionType;
+
+switch (conversionTypeInput)
+{
+    case "1":
+        conversionType = DescriptionConversionType.FieldName;
+        break;
+
+    case "2":
+        conversionType = DescriptionConversionType.FieldValue;
+        break;
+
+    default:
+        Console.WriteLine("Conversion type not specified. Aborting.");
+        return;
+}
+
 
 var stringClassAttributes = new DeviceIcons().GetType().GetFields();
 
@@ -38,7 +60,12 @@ if (File.Exists(enumFilePath))
             {
                 if (Regex.IsMatch(currentLine, $@"\b{attribute.Name}\b"))
                 {
-                    var newLine = currentLine.Replace(attribute.Name, $"[Description(\"{attribute.Name}\")] {Environment.NewLine} {attribute.Name}");
+                    string newLine = string.Empty;
+
+                    if(conversionType == DescriptionConversionType.FieldName)
+                     newLine = currentLine.Replace(attribute.Name, $"[Description(\"{attribute.Name}\")] {Environment.NewLine} {attribute.Name}");
+                    else if (conversionType == DescriptionConversionType.FieldValue)
+                        newLine = currentLine.Replace(attribute.Name, $"[Description(\"{attribute.GetValue(attribute)}\")] {Environment.NewLine} {attribute.Name}");
 
                     stringBuilder.Append(newLine).Append(Environment.NewLine);
                     isMatch = true;
