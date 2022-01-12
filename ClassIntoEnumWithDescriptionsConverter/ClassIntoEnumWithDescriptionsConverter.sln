@@ -5,6 +5,11 @@ VisualStudioVersion = 25.0.1700.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassIntoEnumWithDescriptionsConverter", "ClassIntoEnumWithDescriptionsConverter\ClassIntoEnumWithDescriptionsConverter.csproj", "{9283E035-7997-41E9-8E63-AF0BB7A3120C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{23630EBC-5739-4DF0-A54D-4C74D241B343}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

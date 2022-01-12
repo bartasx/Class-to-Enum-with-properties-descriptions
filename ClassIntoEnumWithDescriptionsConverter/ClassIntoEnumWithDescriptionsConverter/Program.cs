@@ -4,6 +4,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using ClassIntoEnumWithDescriptionsConverter.Enums;
+using System.CodeDom.Compiler;
+using System.CodeDom;
+using Microsoft.CSharp;
 
 Console.WriteLine("Converting string class into new Enum class with descriptions attribute");
 Console.WriteLine("Please insert name file with expected extension");
@@ -29,7 +32,7 @@ switch (conversionTypeInput)
         return;
 }
 
-
+GetClassFromFile("DeviceIcons.cs");
 var stringClassAttributes = new DeviceIcons().GetType().GetFields();
 
 Console.WriteLine("Loading class as textfile");
@@ -92,4 +95,41 @@ if (File.Exists(enumFilePath))
 else
 {
     Console.WriteLine("There's no such a file.");
+}
+
+
+
+static Type GetClassFromFile(string fileName)
+{
+    var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+    var fileContent =  File.ReadAllText(filePath);
+
+    CompilerParameters parameters = new CompilerParameters()
+    {
+        GenerateExecutable = false,
+        GenerateInMemory = true
+    };
+
+    var csharpProvider = new CSharpCodeProvider();
+    CompilerResults results = csharpProvider.CompileAssemblyFromSource(parameters, fileContent);
+
+    if (results.Errors.HasErrors)
+    {
+        foreach (var error in results.Errors)
+            Console.WriteLine(error.ToString());
+        return null;
+    }
+
+
+    var assembly = results.CompiledAssembly;
+    var types = assembly.GetTypes();
+
+    foreach (Type type in types)
+    {
+        var name = type.Name;
+        var properties = type.GetProperties();
+    }
+
+    return null;
+
 }
